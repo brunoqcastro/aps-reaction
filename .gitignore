@@ -1,5 +1,13 @@
 /.idea
 /__pycache__
 /api/__pycache__
-__pycache__/
-reaction_game.db
+**/__pycache__/
+*.db
+*.pyc
+*.pyo
+*.pyd
+.Python
+.env
+venv/
+env/
+*.log

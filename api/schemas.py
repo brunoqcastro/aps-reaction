@@ -12,7 +12,7 @@ class ReactionOut(ReactionBase):
     timestamp: datetime
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 class ConfigBase(BaseModel):
@@ -23,4 +23,4 @@ class ConfigOut(ConfigBase):
     id: int
 
     class Config:
-        orm_mode = True
+        from_attributes = True
