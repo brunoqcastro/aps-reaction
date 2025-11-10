@@ -14,7 +14,7 @@ Button pushButton(PUSHBUTTON_PIN_2);
 
 const char* ssid = "wifi";
 const char* password = "senha";
-const char* serverUrl = "http://192.168.0.40:5000";
+const char* serverUrl = "https://aps-reaction.onrender.com";
 WiFiClient client;
 
 bool jogoAtivo = false;
@@ -44,6 +44,7 @@ void loop() {
     char comando = Serial.read();
     if (comando == '1' && !jogoAtivo) iniciarJogo();
     else if (comando == '2') listarTop10();
+    else if (comando == '3') obterConfig();
   }
 
   if (jogoAtivo && pushButton.read() == 0) {
@@ -78,17 +79,20 @@ void iniciarJogo() {
 void enviarReacao(unsigned long tempo) {
   if (WiFi.status() == WL_CONNECTED) {
     HTTPClient http;
-    http.begin(client, String(serverUrl) + "/reacao");
+    http.begin(client, String(serverUrl) + "/reactions");
     http.addHeader("Content-Type", "application/json");
 
-    String body = "{\"tempo_ms\": " + String(tempo) + "}";
+    String body = "{\"reaction_time\": " + String(tempo) + "}";
     int code = http.POST(body);
+
+    Serial.println("Código de retorno do envio de tempo:" + String(code));
 
     if (code > 0) {
       Serial.println("Tempo enviado com sucesso!");
     } else {
       Serial.println("Falha ao enviar tempo.");
     }
+    
     http.end();
   }
 }
@@ -96,8 +100,10 @@ void enviarReacao(unsigned long tempo) {
 void listarTop10() {
   if (WiFi.status() == WL_CONNECTED) {
     HTTPClient http;
-    http.begin(client, String(serverUrl) + "/reacoes");
+    http.begin(client, String(serverUrl) + "/reactions/top10");
     int code = http.GET();
+
+    Serial.println("Código de retorno do listar top10:" + String(code));
 
     if (code == 200) {
       String payload = http.getString();
@@ -113,8 +119,12 @@ void listarTop10() {
 void obterConfig() {
   if (WiFi.status() == WL_CONNECTED) {
     HTTPClient http;
-    http.begin(client, String(serverUrl) + "/config");
+    String url = String(serverUrl) + "/config";
+    http.begin(client, url);
     int code = http.GET();
+
+    Serial.println("Código de retorno do obter config:" + String(code));
+    Serial.println("Url:" + url);
 
     if (code == 200) {
       String payload = http.getString();
