@@ -21,3 +21,7 @@ def create_reaction(reaction: schemas.ReactionCreate, db: Session = Depends(get_
 @router.get("/top10", response_model=list[schemas.ReactionOut])
 def get_top10(db: Session = Depends(get_db)):
     return crud.get_top_reactions(db)
+
+@router.get("/last", response_model=schemas.ReactionOut)
+def get_last_reaction(db: Session = Depends(get_db)):
+    return crud.get_last_reaction(db)

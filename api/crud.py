@@ -11,6 +11,9 @@ def create_reaction(db: Session, reaction: schemas.ReactionCreate):
 def get_top_reactions(db: Session, limit: int = 10):
     return db.query(models.Reaction).order_by(models.Reaction.reaction_time.asc()).limit(limit).all()
 
+def get_last_reaction(db: Session):
+    return db.query(models.Reaction).order_by(models.Reaction.timestamp.desc()).first()
+
 def get_config(db: Session):
     config = db.query(models.Config).first()
     if not config:
