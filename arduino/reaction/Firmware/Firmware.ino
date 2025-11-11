@@ -131,6 +131,7 @@ void listarTop10() {
     } else {
       Serial.println("Erro ao buscar top 10.");
     }
+
     http.end();
     client.stop();
   }
@@ -142,16 +143,15 @@ void obterConfig() {
     String url = String(serverUrl) + "/config/";
     http.addHeader("Content-Type", "application/json");
     http.addHeader("User-Agent", "ESP8266");
+
     http.begin(client, url);
     const char* headerKeys[] = {"Location"};
     http.collectHeaders(headerKeys, 1);
+
     int code = http.GET();
 
-    Serial.println("Código de retorno do obter config:" + String(code));
+    Serial.println("Código de retorno do obter config: " + String(code));
     Serial.println("Url:" + url);
-    for (int i = 0; i < http.headers(); i++) {
-      Serial.printf("Header %s: %s\n", http.headerName(i).c_str(), http.header(i).c_str());
-    }
 
     if (code == HTTP_CODE_TEMPORARY_REDIRECT || code == HTTP_CODE_MOVED_PERMANENTLY) {
       String newUrl = http.header("Location");
@@ -159,7 +159,7 @@ void obterConfig() {
       http.end();
       http.begin(client, newUrl);
       code = http.GET();
-      Serial.println("Código de retorno do obter config na segunda vez:" + String(code));
+      Serial.println("Código de retorno do obter config na segunda vez: " + String(code));
     }
 
     if (code == 200) {
