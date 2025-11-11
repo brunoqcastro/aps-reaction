@@ -14,7 +14,7 @@ Button pushButton(PUSHBUTTON_PIN_2);
 
 const char* ssid = "wifi";
 const char* password = "senha";
-const char* serverUrl = "https://aps-reaction.onrender.com";
+const char* serverUrl = "http://192.168.0.40:5000";
 WiFiClient client;
 
 bool jogoAtivo = false;
@@ -79,7 +79,7 @@ void iniciarJogo() {
 void enviarReacao(unsigned long tempo) {
   if (WiFi.status() == WL_CONNECTED) {
     HTTPClient http;
-    http.begin(client, String(serverUrl) + "/reactions");
+    http.begin(client, String(serverUrl) + "/reactions/");
     http.addHeader("Content-Type", "application/json");
 
     String body = "{\"reaction_time\": " + String(tempo) + "}";
@@ -87,23 +87,40 @@ void enviarReacao(unsigned long tempo) {
 
     Serial.println("Código de retorno do envio de tempo:" + String(code));
 
-    if (code > 0) {
+    if (code == 200) {
       Serial.println("Tempo enviado com sucesso!");
     } else {
       Serial.println("Falha ao enviar tempo.");
     }
     
     http.end();
+    client.stop();
   }
 }
 
 void listarTop10() {
   if (WiFi.status() == WL_CONNECTED) {
     HTTPClient http;
-    http.begin(client, String(serverUrl) + "/reactions/top10");
+    String url = String(serverUrl) + "/reactions/top10";
+    http.begin(client, url);
+    http.addHeader("Content-Type", "application/json");
+    http.addHeader("User-Agent", "ESP8266");
+
+    const char* headerKeys[] = {"Location"};
+    http.collectHeaders(headerKeys, 1);
+    
     int code = http.GET();
 
     Serial.println("Código de retorno do listar top10:" + String(code));
+
+    if (code == HTTP_CODE_TEMPORARY_REDIRECT || code == HTTP_CODE_MOVED_PERMANENTLY) {
+      String newUrl = http.header("Location");
+      Serial.println("Url nova:" + newUrl);
+      http.end();
+      http.begin(client, newUrl);
+      code = http.GET();
+      Serial.println("Código de retorno do listar top 10 na segunda vez:" + String(code));
+    }
 
     if (code == 200) {
       String payload = http.getString();
@@ -113,18 +130,35 @@ void listarTop10() {
       Serial.println("Erro ao buscar top 10.");
     }
     http.end();
+    client.stop();
   }
 }
 
 void obterConfig() {
   if (WiFi.status() == WL_CONNECTED) {
     HTTPClient http;
-    String url = String(serverUrl) + "/config";
+    String url = String(serverUrl) + "/config/";
+    http.addHeader("Content-Type", "application/json");
+    http.addHeader("User-Agent", "ESP8266");
     http.begin(client, url);
+    const char* headerKeys[] = {"Location"};
+    http.collectHeaders(headerKeys, 1);
     int code = http.GET();
 
     Serial.println("Código de retorno do obter config:" + String(code));
     Serial.println("Url:" + url);
+    for (int i = 0; i < http.headers(); i++) {
+      Serial.printf("Header %s: %s\n", http.headerName(i).c_str(), http.header(i).c_str());
+    }
+
+    if (code == HTTP_CODE_TEMPORARY_REDIRECT || code == HTTP_CODE_MOVED_PERMANENTLY) {
+      String newUrl = http.header("Location");
+      Serial.println("Url nova:" + newUrl);
+      http.end();
+      http.begin(client, newUrl);
+      code = http.GET();
+      Serial.println("Código de retorno do obter config na segunda vez:" + String(code));
+    }
 
     if (code == 200) {
       String payload = http.getString();
@@ -137,5 +171,6 @@ void obterConfig() {
       Serial.println("Usando configuração padrão (500–5000 ms).");
     }
     http.end();
+    client.stop();
   }
 }

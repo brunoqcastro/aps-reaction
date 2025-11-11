@@ -35,7 +35,7 @@ O sistema permite registrar os resultados, ajustar o tempo aleatório de reaçã
 
 ### 1️⃣ Clone o repositório
 ```bash
-git clone https://github.com/seuusuario/api-reaction-game.git
+git clone https://github.com/brunoqcastro/aps-reaction.git
 cd api-reaction-game
 ````
 
@@ -91,8 +91,8 @@ Retorna os valores atuais de tempo **mínimo** e **máximo** usados pelo Arduino
 
 ```json
 {
-  "min_time": 500,
-  "max_time": 5000
+  "min_ms": 500,
+  "max_ms": 5000
 }
 ```
 
@@ -106,8 +106,8 @@ Atualiza os tempos **mínimo** e **máximo** de reação (em milissegundos).
 
 ```json
 {
-  "min_time": 1000,
-  "max_time": 3000
+  "min_ms": 1000,
+  "max_ms": 3000
 }
 ```
 
