@@ -14,8 +14,8 @@ Button pushButton(PUSHBUTTON_PIN_2);
 
 const char* ssid = "wifi";
 const char* password = "senha";
-const char* serverUrl = "http://192.168.0.40:5000";
-WiFiClient client;
+const char* serverUrl = "https://aps-reaction.onrender.com";
+WiFiClientSecure client;
 
 bool jogoAtivo = false;
 unsigned long inicioTempo = 0;
@@ -32,6 +32,8 @@ void setup() {
     Serial.print(".");
   }
   Serial.println("\nConectado ao WiFi!");
+
+  client.setInsecure();
 
   pushButton.init();
 
