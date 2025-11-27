@@ -6,7 +6,7 @@ import okhttp3.OkHttpClient
 import java.util.concurrent.TimeUnit
 
 object ApiClient {
-    private const val BASE_URL = "http://192.168.0.40:5000"
+    private const val BASE_URL = "https://aps-reaction.onrender.com/"
 
     private val client = OkHttpClient.Builder()
         .callTimeout(20, TimeUnit.SECONDS)
