@@ -1,5 +1,6 @@
 package com.reaction.data
 
+import kotlinx.serialization.SerialName
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.PUT
@@ -18,7 +19,7 @@ data class UpdateConfigRequest(
 data class ReactionRecord(
     val id: Int,
     val reaction_time: Int,
-    val created_at: String
+    val timestamp: String
 )
 
 interface ApiService {

@@ -58,9 +58,9 @@ fun QueryScreen(viewModel: QueryViewModel = viewModel()) {
             Text("Tempo: ${item.reaction_time} ms")
             val parsed = runCatching {
                 val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault())
-                val dt = sdf.parse(item.created_at)
+                val dt = sdf.parse(item.timestamp)
                 SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.getDefault()).format(dt)
-            }.getOrNull() ?: item.created_at
+            }.getOrNull() ?: item.timestamp
             Text("Data: $parsed")
         }
 
