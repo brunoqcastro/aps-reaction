@@ -25,3 +25,11 @@ def get_top10(db: Session = Depends(get_db)):
 @router.get("/last", response_model=schemas.ReactionOut)
 def get_last_reaction(db: Session = Depends(get_db)):
     return crud.get_last_reaction(db)
+
+@router.get("/last/{count}", response_model=list[schemas.ReactionOut])
+def get_last_reactions(count: int, db: Session = Depends(get_db)):
+    return crud.get_last_reactions(db, count)
+
+@router.get("/{id}", response_model=schemas.ReactionOut)
+def get_reaction(id: int, db: Session = Depends(get_db)):
+    return crud.get_reaction_by_id(db, id)

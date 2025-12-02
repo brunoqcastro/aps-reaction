@@ -14,6 +14,18 @@ def get_top_reactions(db: Session, limit: int = 10):
 def get_last_reaction(db: Session):
     return db.query(models.Reaction).order_by(models.Reaction.timestamp.desc()).first()
 
+def get_last_reactions(db: Session, count: int):
+    return (
+        db.query(models.Reaction)
+        .order_by(models.Reaction.timestamp.desc())
+        .limit(count)
+        .all()
+    )
+
+
+def get_reaction_by_id(db: Session, reaction_id: int):
+    return db.query(models.Reaction).filter(models.Reaction.id == reaction_id).first()
+
 def get_config(db: Session):
     config = db.query(models.Config).first()
     if not config:
