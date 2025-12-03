@@ -30,9 +30,11 @@ fun Top10Screen(viewModel: Top10ViewModel = viewModel()) {
             .padding(16.dp)
     ) {
         if (state.items.isEmpty() && !isRefreshing) {
-            Text("Nenhum registro encontrado", modifier = Modifier.padding(8.dp))
-            Button(onClick = viewModel::loadTop10) {
-                Text("Atualizar", modifier = Modifier.padding(8.dp))
+            Column {
+                Text("Nenhum registro encontrado", modifier = Modifier.padding(8.dp))
+                Button(onClick = viewModel::loadTop10) {
+                    Text("Atualizar", modifier = Modifier.padding(8.dp))
+                }
             }
         } else {
             LazyColumn(
