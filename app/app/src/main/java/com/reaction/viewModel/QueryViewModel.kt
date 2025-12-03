@@ -12,7 +12,8 @@ data class QueryState(
     val idStr: String = "",
     val result: ReactionRecord? = null,
     val isLoading: Boolean = false,
-    val error: String? = null
+    val error: String? = null,
+    val lastReactions: List<ReactionRecord> = emptyList(),
 )
 
 class QueryViewModel(
@@ -22,6 +23,16 @@ class QueryViewModel(
     private val _uiState = MutableStateFlow(QueryState())
     val uiState: StateFlow<QueryState> = _uiState
 
+    init {
+        loadLast10()
+    }
+
+    fun loadLast10() {
+        viewModelScope.launch {
+            val list = repo.getLastReaction(10)
+            _uiState.value = _uiState.value.copy(lastReactions = list)
+        }
+    }
     fun setIdStr(value: String) {
         _uiState.value = _uiState.value.copy(idStr = value)
     }

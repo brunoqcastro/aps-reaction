@@ -16,4 +16,5 @@ class ReactionRepository {
     suspend fun getTop10(): List<ReactionRecord> = api.getTop10()
 
     suspend fun getReactionById(id: Int): ReactionRecord = api.getReactionById(id)
+    suspend fun getLastReaction(quantity: Int): List<ReactionRecord> = api.getLastReaction(quantity)
 }

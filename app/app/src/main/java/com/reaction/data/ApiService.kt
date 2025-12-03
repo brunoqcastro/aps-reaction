@@ -36,4 +36,7 @@ interface ApiService {
 
     @GET("/reactions/{id}")
     suspend fun getReactionById(@Path("id") id: Int): ReactionRecord
+
+    @GET("/reactions/last/{qt}")
+    suspend fun getLastReaction(@Path("qt") quantity: Int): List<ReactionRecord>
 }
